@@ -21,3 +21,4 @@ else:
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
     )
     database = databases.Database(SQLALCHEMY_DATABASE_URL)
+
