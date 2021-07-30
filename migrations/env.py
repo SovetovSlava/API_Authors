@@ -1,3 +1,6 @@
+import os
+import sys
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,28 +8,30 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from os import environ
-from app.models import authors, articles
+# add current path to PYTHONPATH, otherwise app module will not be found when alembic executing
+sys.path.append(os.getcwd())
 
-# Alembic Config объект предоставляет доступ
-# к переменным из файла alembic.ini
+from app.models import database, authors, articles
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "DB_USER", str("postgres"))
-config.set_section_option(section, "DB_PASS", str("Mad21chem1st"))
-config.set_section_option(section, "DB_NAME", str("test_db"))
-config.set_section_option(section, "DB_HOST", str("localhost"))
+config.set_section_option(section, "DB_USER", database.DB_USER)
+config.set_section_option(section, "DB_PASS", database.DB_PASSWORD)
+config.set_section_option(section, "DB_NAME", database.DB_NAME)
+config.set_section_option(section, "DB_HOST", database.DB_HOST)
 
+# Interpret the config file for Python logging.
+# This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 target_metadata = [authors.metadata, articles.metadata]
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
