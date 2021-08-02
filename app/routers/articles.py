@@ -1,5 +1,4 @@
 from app.schemas.articles import ArticleModel, ArticleDetailsModel, ArticleCreateModel
-from app.utils import authors as authors_utils
 from app.utils import articles as articles_utils
 from fastapi import APIRouter, HTTPException
 
@@ -9,12 +8,11 @@ router = APIRouter()
 @router.post("/articles/create", response_model=ArticleDetailsModel, status_code=201)
 async def create_article(article: ArticleCreateModel):
 
-    author = await authors_utils.get_author(article.author_id)
+    article = await articles_utils.create_article(article)
 
-    if author is None:
-        raise HTTPException(status_code=400, detail="Incorrect author_id")
+    if isinstance(article, Exception):
+        raise HTTPException(status_code=400, detail=article.message)
 
-    article = await articles_utils.create_article(article, author)
     return article
 
 

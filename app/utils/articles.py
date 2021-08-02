@@ -2,11 +2,17 @@ from app.models.database import database
 from app.models.articles import articles_table
 from app.models.authors import authors_table
 from app.schemas import articles as article_schema
-from app.schemas import authors as authors_schema
+from app.schemas import authors as author_schema
+from app.utils import authors as authors_utils
 from sqlalchemy import func, select
 
 
-async def create_article(article: article_schema.ArticleModel, author: authors_schema.AuthorDetailsModel):
+async def create_article(article: article_schema.ArticleCreateModel):
+
+    author = await authors_utils.get_author(article.author_id)
+
+    if author is None:
+        return author_schema.NoAuthorFoundByIDError(article.author_id)
 
     query = (
         articles_table.insert()
