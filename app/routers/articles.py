@@ -1,4 +1,5 @@
 from app.schemas.articles import ArticleModel, ArticleDetailsModel, ArticleCreateModel
+from app.schemas.authors import NoAuthorFoundByIDError
 from app.utils import articles as articles_utils
 from fastapi import APIRouter, HTTPException
 
@@ -7,11 +8,10 @@ router = APIRouter()
 
 @router.post("/articles/create", response_model=ArticleDetailsModel, status_code=201)
 async def create_article(article: ArticleCreateModel):
-
-    article = await articles_utils.create_article(article)
-
-    if isinstance(article, Exception):
-        raise HTTPException(status_code=400, detail=article.message)
+    try:
+        article = await articles_utils.create_article(article)
+    except NoAuthorFoundByIDError as error:
+        raise HTTPException(status_code=400, detail=error.message)
 
     return article
 

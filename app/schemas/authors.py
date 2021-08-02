@@ -12,5 +12,6 @@ class AuthorDetailsModel(AuthorBase):
 
 
 class NoAuthorFoundByIDError(Exception):
+
     def __init__(self, id):
         self.message = f'Incorrect author_id: {id}'

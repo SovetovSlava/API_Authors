@@ -12,7 +12,7 @@ async def create_article(article: article_schema.ArticleCreateModel):
     author = await authors_utils.get_author(article.author_id)
 
     if author is None:
-        return author_schema.NoAuthorFoundByIDError(article.author_id)
+        raise author_schema.NoAuthorFoundByIDError(article.author_id)
 
     query = (
         articles_table.insert()
