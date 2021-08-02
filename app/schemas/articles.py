@@ -10,6 +10,7 @@ class ArticleModel(BaseModel):
 class ArticleDetailsModel(ArticleModel):
     """ Return response data """
     id: int
+    author_id: int
     author_name: str
 
 

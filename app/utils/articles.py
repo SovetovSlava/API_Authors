@@ -30,7 +30,8 @@ async def create_article(article: article_schema.ArticleCreateModel):
     article = await database.fetch_one(query)
 
     # Convert to dict and add author_name key to it
-    article = dict(zip(article, article.values()))
+    article = dict(article)
+    article["author_id"] = author["id"]
     article["author_name"] = author["name"]
     return article
 
